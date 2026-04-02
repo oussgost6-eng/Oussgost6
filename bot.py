@@ -29,14 +29,10 @@ async def run():
         page.set_default_timeout(60000)
 
         print("🚀 Ouverture Facebook...")
-        await page.goto("https://www.facebook.com")
-        await asyncio.sleep(2)
-
         await page.goto("https://www.facebook.com/messages")
-        print("✅ Page chargée")
-        await asyncio.sleep(3)
+        await asyncio.sleep(8)
 
-        print("🔥 BOT ULTRA STABLE")
+        print("✅ Bot actif")
 
         replied_messages = set()
         counter = 0
@@ -45,33 +41,31 @@ async def run():
             try:
                 counter += 1
 
-                # 🔄 Reload automatique toutes les 30 boucles
+                # 🔄 reload toutes les 30 boucles
                 if counter % 30 == 0:
-                    print("🔄 Reload page...")
+                    print("🔄 Reload...")
                     await page.reload()
                     await asyncio.sleep(5)
 
-                # ✅ Sélecteur plus stable
-                conversations = await page.locator("div[role='listitem']").all()
+                # ✅ BON SELECTEUR (IMPORTANT)
+                conversations = await page.locator("div[role='row']").all()
 
-                # ❗ Si rien trouvé → reload
-                if len(conversations) == 0:
-                    print("⚠️ Rien trouvé, reload...")
+                if not conversations:
+                    print("⚠️ aucune conversation trouvée")
                     await page.reload()
                     await asyncio.sleep(5)
                     continue
 
-                for conv in conversations:
+                for conv in conversations[:5]:  # on garde 5 pour stabilité
                     try:
                         await conv.scroll_into_view_if_needed()
 
-                        # ✅ clic ultra robuste
                         try:
-                            await conv.click(timeout=1500)
+                            await conv.click(timeout=2000)
                         except:
-                            await page.evaluate("(el) => el.click()", conv)
+                            await conv.click(force=True)
 
-                        await asyncio.sleep(1)
+                        await asyncio.sleep(2)
 
                         messages = await page.locator("div[role='gridcell']").all()
                         if not messages:
@@ -95,13 +89,13 @@ async def run():
 
                         replied_messages.add(last_msg)
 
-                        await asyncio.sleep(2)
+                        await asyncio.sleep(3)
 
                     except Exception as e:
                         print("❌ Erreur conv:", e)
                         continue
 
-                await asyncio.sleep(1)
+                await asyncio.sleep(2)
 
             except Exception as e:
                 print("❌ Erreur globale:", e)
