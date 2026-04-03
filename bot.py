@@ -1,5 +1,4 @@
 import asyncio
-import random
 from playwright.async_api import async_playwright
 
 RESPONSE = """🔥 فرصة لا تُفوّت لعشّاق المراهنات! 🔥
@@ -23,8 +22,7 @@ async def run():
             args=[
                 "--no-sandbox",
                 "--disable-dev-shm-usage",
-                "--disable-gpu",
-                "--disable-blink-features=AutomationControlled"
+                "--disable-gpu"
             ]
         )
 
@@ -35,44 +33,29 @@ async def run():
         page = await context.new_page()
         page.set_default_timeout(60000)
 
-        print("🚀 Ouverture Facebook...")
+        print("🚀 Ouverture Messenger...")
         await page.goto("https://www.facebook.com/messages")
-        await asyncio.sleep(8)
+        await asyncio.sleep(5)
 
-        print("✅ Bot actif")
+        print("⚡ BOT ULTRA RAPIDE ACTIF")
 
-        replied_messages = set()
-        counter = 0
+        replied = set()
 
         while True:
             try:
-                counter += 1
-
-                # 🔄 reload toutes les 30 boucles
-                if counter % 30 == 0:
-                    print("🔄 Reload...")
-                    await page.reload()
-                    await asyncio.sleep(5)
-
-                # ✅ BON SELECTEUR (IMPORTANT)
+                # 🔥 récupérer conversations visibles
                 conversations = await page.locator("div[role='row']").all()
 
-                if not conversations:
-                    print("⚠️ aucune conversation trouvée")
-                    await page.reload()
-                    await asyncio.sleep(5)
-                    continue
-
-                for conv in conversations[:5]:  # on garde 5 pour stabilité
+                for conv in conversations:
                     try:
-                        await conv.scroll_into_view_if_needed()
-
+                        # ⚡ clic direct sans scroll lent
                         try:
-                            await conv.click(timeout=2000)
+                            await conv.click(timeout=1000)
                         except:
                             await conv.click(force=True)
 
-                        await asyncio.sleep(2)
+                        # ⚡ très petit délai
+                        await asyncio.sleep(0.5)
 
                         messages = await page.locator("div[role='gridcell']").all()
                         if not messages:
@@ -83,29 +66,26 @@ async def run():
                         if not last_msg.strip():
                             continue
 
-                        if last_msg in replied_messages:
+                        if last_msg in replied:
                             continue
 
+                        # 🔥 envoyer réponse direct
                         box = page.locator("div[role='textbox']")
-                        response = RESPONSE
-
-                        await box.fill(response)
+                        await box.fill(RESPONSE)
                         await box.press("Enter")
 
-                        print("📩 Réponse envoyée:", response)
+                        print("⚡ Réponse instant:", last_msg[:30])
 
-                        replied_messages.add(last_msg)
-
-                        await asyncio.sleep(3)
+                        replied.add(last_msg)
 
                     except Exception as e:
-                        print("❌ Erreur conv:", e)
                         continue
 
-                await asyncio.sleep(2)
+                # ⚡ boucle ultra rapide
+                await asyncio.sleep(0.5)
 
             except Exception as e:
-                print("❌ Erreur globale:", e)
-                await asyncio.sleep(5)
+                print("Erreur:", e)
+                await asyncio.sleep(2)
 
 asyncio.run(run())
