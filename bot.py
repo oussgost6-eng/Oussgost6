@@ -3,10 +3,19 @@ import random
 from playwright.async_api import async_playwright
 
 RESPONSES = [
-    "Salam 👋 merci pour ton message !",
-    "Je te réponds dès que possible 😊",
-    "Bien reçu 🙏 je reviens vers toi rapidement",
-    "Merci pour ton message 👍"
+    "🔥 فرصة لا تُفوّت لعشّاق المراهنات! 🔥
+
+هل تبحث عن أفضل منصات الـ betting لتحقيق أرباح حقيقية؟ 💰
+انضم الآن واحصل على:
+✅ بونص ترحيبي ضخم عند التسجيل
+✅ أرباح سريعة وسهلة
+✅ واجهة سهلة وآمنة
+✅ دعم متواصل على مدار الساعة
+
+🚀 ابدأ رحلتك اليوم وكن من الرابحين!
+📲 سجّل الآن عبر الرابط واغتنم الفرصة قبل انتهاء العرض!
+رابط التسجيل على لاينبت: 
+https://lb-aff.com/L?tag=d_3662664m_22611c_site&site=3662664&ad=22611&r=registration",
 ]
 
 async def run():
